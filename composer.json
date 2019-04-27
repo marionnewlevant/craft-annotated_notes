@@ -11,8 +11,8 @@
         "annotated notes"
     ],
     "support": {
-        "docs": "https://github.com/craft-annotated_notes/annotated-notes/blob/master/README.md",
-        "issues": "https://github.com/craft-annotated_notes/annotated-notes/issues"
+        "docs": "https://github.com/marionnewlevant/craft-annotated_notes/blob/master/README.md",
+        "issues": "https://github.com/marionnewlevant/craft-annotated_notes/issues"
     },
     "license": "MIT",
     "authors": [
@@ -34,7 +34,6 @@
         "handle": "annotated-notes",
         "hasCpSettings": false,
         "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/craft-annotated_notes/annotated-notes/master/CHANGELOG.md",
         "components": {
             "annotatedNotesService": "marionnewlevant\\annotatednotes\\services\\AnnotatedNotesService"
         },
