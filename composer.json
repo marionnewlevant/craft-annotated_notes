@@ -1,0 +1,43 @@
+{
+    "name": "marionnewlevant/annotated-notes",
+    "description": "Field for multiple notes with automatic annotation",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "annotated notes"
+    ],
+    "support": {
+        "docs": "https://github.com/craft-annotated_notes/annotated-notes/blob/master/README.md",
+        "issues": "https://github.com/craft-annotated_notes/annotated-notes/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marion Newlevant",
+            "homepage": "http://marion.newlevant.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "marionnewlevant\\annotatednotes\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Annotated Notes",
+        "handle": "annotated-notes",
+        "hasCpSettings": false,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/craft-annotated_notes/annotated-notes/master/CHANGELOG.md",
+        "components": {
+            "annotatedNotesService": "marionnewlevant\\annotatednotes\\services\\AnnotatedNotesService"
+        },
+        "class": "marionnewlevant\\annotatednotes\\AnnotatedNotes"
+    }
+}
