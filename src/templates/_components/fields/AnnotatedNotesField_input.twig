@@ -33,12 +33,6 @@
     <thead>
         <tr>
             {% for col in cols %}
-                {%- switch col.type %}
-                    {%- case 'time' %}
-                        {%- do view.registerAssetBundle('craft\\web\\assets\\timepicker\\TimepickerAsset') %}
-                    {%- case 'template' %}
-                        {%- do view.registerAssetBundle("craft\\web\\assets\\vue\\VueAsset") %}
-                {%- endswitch %}
                 <th scope="col" class="{{ col.class ?? '' }}">
                     {%- if col.heading is defined and col.heading %}{{ col.heading }}{% else %}&nbsp;{% endif %}
                     {%- if col.info is defined -%}
@@ -56,7 +50,8 @@
             <tr data-id="{{ rowId }}">
                 {% for colId, col in cols %}
                     <!-- colId: {{ colId }} colType: {{ col.type }} -->
-                    {% set isDisabled = static or colId == 'col2' %}
+                    {% set isDisabled = static %}
+                    {% set isReadonly = colId == 'col2' %}
                     {% set cell = row[colId] ?? null %}
                     {% set value = cell.value is defined ? cell.value : cell %}
                     {% if col.type == 'heading' %}
@@ -66,62 +61,8 @@
                     {% else %}
                         {% set hasErrors = cell.hasErrors ?? false %}
                         {% set cellName = name~'['~rowId~']['~colId~']' %}
-                        {% set textual = (col.type in ['color', 'date', 'multiline', 'number', 'singleline', 'template', 'time']) %}
-                        {% set isCode = col.code is defined or col.type == 'color' %}
-                        <td class="{% if textual %}textual{% endif %} {% if col.class is defined %}{{ col.class }}{% endif %} {% if isCode %}code{% endif %} {% if hasErrors %}error{% endif %}"{% if col.width is defined %} width="{{ col.width }}"{% endif %}>
-                            {%- switch col.type -%}
-                                {%- case 'checkbox' -%}
-                                    {% include "_includes/forms/checkbox" with {
-                                        name: cellName,
-                                        value:  col.value ?? 1,
-                                        checked: value is not empty,
-                                        disabled: isDisabled
-                                    } only %}
-                                {%- case 'color' -%}
-                                    {% include "_includes/forms/color" with {
-                                        name: cellName,
-                                        value: value,
-                                        small: true,
-                                        disabled: isDisabled
-                                    } only %}
-                                {%- case 'date' -%}
-                                    {% include "_includes/forms/date" with {
-                                        name: cellName,
-                                        value: value,
-                                        disabled: isDisabled
-                                    } only %}
-                                {%- case 'lightswitch' -%}
-                                    {% include "_includes/forms/lightswitch" with {
-                                        name: cellName,
-                                        on: value,
-                                        value: col.value ?? 1,
-                                        small: true,
-                                        disabled: isDisabled
-                                    } only %}
-                                {% case 'select' -%}
-                                    {% include "_includes/forms/select" with {
-                                        class: 'small',
-                                        name: cellName,
-                                        options: cell.options ?? col.options,
-                                        value: value,
-                                        disabled: isDisabled
-                                    } only %}
-                                {%- case 'time' -%}
-                                    {% include "_includes/forms/time" with {
-                                        name: cellName,
-                                        value: value,
-                                        disabled: isDisabled
-                                    } only %}
-                                {%- case 'template' -%}
-                                    {% include "_includes/forms/autosuggest" with {
-                                        name: cellName,
-                                        suggestions: craft.cp.getTemplateSuggestions(),
-                                        value: value,
-                                        disabled: isDisabled
-                                    } only %}
-                                {%- default -%}
-                                    <textarea name="{{ cellName }}" rows="1"{% if isDisabled %} disabled{% endif %}{% if col.placeholder is defined %} placeholder="{{ col.placeholder }}"{% endif %}>{{ value }}</textarea>
-                            {%- endswitch -%}
+                        <td class="textual {% if col.class is defined %}{{ col.class }}{% endif %} {% if hasErrors %}error{% endif %}"{% if col.width is defined %} width="{{ col.width }}"{% endif %}>
+                            <textarea name="{{ cellName }}" rows="1"{{ isDisabled ? ' disabled' }}{{ isReadonly ? ' readonly' }}{% if col.placeholder is defined %} placeholder="{{ col.placeholder }}"{% endif %}>{{ value }}</textarea>
                         </td>
                     {% endif %}
                 {% endfor %}

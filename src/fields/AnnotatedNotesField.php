@@ -29,30 +29,19 @@ class AnnotatedNotesField extends Table
     // =========================================================================
 
     public $annotationTwig = '';
+    public $annotationHeading = 'Annotation';
+    public $noteHeading = 'Notes';
+    public $noteColumnWidth = 80;
 
     /**
      * @var array|null The columns that should be shown in the table
      */
-    public $columns = [
-        'col1' => [
-            'heading' => 'Note',
-            'handle' => 'note',
-            'width' => '80%',
-            'type' => 'multiline'
-        ],
-        'col2' => [
-            'heading' => 'Annotation',
-            'handle' => 'annotation',
-            'width' => '20%',
-            'type' => 'singleline'
-        ],
-    ];
+    public $columns = [];
 
     /**
      * @var array The default row values that new elements should have
      */
-    public $defaults = [
-    ];
+    public $defaults = [];
 
     public $annotation = '';
 
@@ -70,6 +59,25 @@ class AnnotatedNotesField extends Table
     // Public Methods
     // =========================================================================
 
+    public function init()
+    {
+        $this->columns = [
+            'col1' => [
+                'heading' => $this->noteHeading,
+                'handle' => 'note',
+                'width' => ''.$this->noteColumnWidth.'%',
+                'type' => 'multiline'
+            ],
+            'col2' => [
+                'heading' => $this->annotationHeading,
+                'handle' => 'annotation',
+                'width' => ''.(100-$this->noteColumnWidth).'%',
+                'type' => 'singleline'
+            ],
+        ];
+        parent::init();
+    }
+
     /**
      * @inheritdoc
      */
@@ -77,8 +85,12 @@ class AnnotatedNotesField extends Table
     {
         $rules = parent::rules();
         $rules = array_merge($rules, [
-            ['annotationTwig', 'string'],
+            [['annotationTwig', 'annotationHeading', 'noteHeading'], 'string'],
             ['annotationTwig', 'default', 'value' => ''],
+            ['annotationHeading', 'default', 'value' => 'Annotation'],
+            ['noteHeading', 'default', 'value' => 'Note'],
+            ['noteColumnWidth', 'number', 'integerOnly' => true, 'min' => 10, 'max' => 90],
+            ['noteColumnWidth', 'default', 'value' => 80],
         ]);
 
         return $rules;

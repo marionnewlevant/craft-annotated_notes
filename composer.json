@@ -2,7 +2,7 @@
     "name": "marionnewlevant/annotated-notes",
     "description": "Field for multiple notes with automatic annotation",
     "type": "craft-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "craft",
         "cms",

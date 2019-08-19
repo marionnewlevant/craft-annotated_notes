@@ -7,7 +7,7 @@
     name: 'annotationTwig',
     value: field.annotationTwig,
     class: 'code',
-    rows: 10
+    rows: 5
 }) }}
 
 <div style="display: none;">
@@ -45,10 +45,37 @@
     errors: field.getErrors('addRowLabel')
 }) }}
 
-{% if craft.app.db.isMysql %}
-    <hr>
-    <a class="fieldtoggle" data-target="advanced">{{ "Advanced"|t('app') }}</a>
-    <div id="advanced" class="hidden">
+<hr>
+<a class="fieldtoggle" data-target="advanced">{{ "Advanced"|t('app') }}</a>
+{% set hideAdvanced = not (field.getErrors('annotationHeading') or field.getErrors('noteHeading') or field.getErrors('noteColumnWidth')) %}
+<div id="advanced" {{ hideAdvanced ? 'class="hidden"' }}>
+    {{ forms.textField({
+        label: "Annotation Label"|t('annotated-notes'),
+        instructions: "The user-visible name of the annotation column"|t('annotated-notes'),
+        id: 'annotationHeading',
+        name: 'annotationHeading',
+        value: field.annotationHeading,
+        errors: field.getErrors('annotationHeading')
+    }) }}
+    {{ forms.textField({
+        label: "Note Label"|t('annotated-notes'),
+        instructions: "The user-visible name of the note column"|t('annotated-notes'),
+        id: 'noteHeading',
+        name: 'noteHeading',
+        value: field.noteHeading,
+        errors: field.getErrors('noteHeading')
+    }) }}
+    {{ forms.textField({
+        label: "Note Column Width"|t('annotated-notes'),
+        instructions: "The width (%) of the Note column"|t('annotated-notes'),
+        id: 'noteColumnWidth',
+        name: 'noteColumnWidth',
+        value: field.noteColumnWidth,
+        size: 3,
+        errors: field.getErrors('noteColumnWidth')
+    }) }}
+
+    {% if craft.app.db.isMysql %}
         {{ forms.selectField({
             label: "Column Type"|t('app'),
             id: 'column-type',
@@ -61,5 +88,5 @@
             value: field.columnType,
             warning: (field.id ? "Changing this may result in data loss."|t('app')),
         }) }}
-    </div>
-{% endif %}
+    {% endif %}
+</div>

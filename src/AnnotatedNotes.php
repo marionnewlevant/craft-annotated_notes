@@ -74,9 +74,7 @@ class AnnotatedNotes extends Plugin
         self::$plugin = $this;
 
         $this->preparsedElements = [
-            'onBeforeSave' => [],
             'onSave' => [],
-            'onMoveElement' => [],
         ];
 
         Event::on(
@@ -88,35 +86,35 @@ class AnnotatedNotes extends Plugin
         );
 
         // After save element event handler
-        Event::on(Elements::class, Elements::EVENT_AFTER_SAVE_ELEMENT,
-            function (ElementEvent $event) {
-                /** @var Element $element */
-                $element = $event->element;
-                $key = $element->id . '__' . $element->siteId;
+       Event::on(Elements::class, Elements::EVENT_AFTER_SAVE_ELEMENT,
+           function (ElementEvent $event) {
+               /** @var Element $element */
+               $element = $event->element;
+               $key = $element->id . '__' . $element->siteId;
 
-                if (!\in_array($key, $this->preparsedElements['onSave'], true)) {
-                    $this->preparsedElements['onSave'][] = $key;
+               if (!\in_array($key, $this->preparsedElements['onSave'], true)) {
+                   $this->preparsedElements['onSave'][] = $key;
 
-                    $content = self::$plugin->annotatedNotesService->getAnnotatedContent($element);
+                   $content = self::$plugin->annotatedNotesService->getAnnotatedContent($element);
 
-                    if (!empty($content)) {
-                        $this->resetUploads();
+                   if (!empty($content)) {
+                       $this->resetUploads();
 
-                        if ($element instanceof Asset) {
-                            $element->setScenario(Element::SCENARIO_DEFAULT);
-                        }
+                       if ($element instanceof Asset) {
+                           $element->setScenario(Element::SCENARIO_DEFAULT);
+                       }
 
-                        $element->setFieldValues($content);
-                        $success = Craft::$app->getElements()->saveElement($element, true, false);
+                       $element->setFieldValues($content);
+                       $success = Craft::$app->getElements()->saveElement($element, true, false);
 
-                        // if no success, log error
-                        if (!$success) {
-                            Craft::error('Couldn’t save element with id “' . $element->id . '”', __METHOD__);
-                        }
-                    }
-                }
-            }
-        );
+                       // if no success, log error
+                       if (!$success) {
+                           Craft::error('Couldn’t save element with id “' . $element->id . '”', __METHOD__);
+                       }
+                   }
+               }
+           }
+       );
 
         Craft::info(
             Craft::t(
